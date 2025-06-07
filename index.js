@@ -2,8 +2,8 @@
 require('dotenv').config();
 
 // *************** IMPORT APP & DB CONNECTOR ***************
-const app = require('./core/Express');
-const connectToDatabase = require('./core/Database');
+const app = require('./utils/Express');
+const connectToDatabase = require('./utils/Database');
 
 // *************** IMPORT MODELS ***************
 require('./schema/student/student.model');
