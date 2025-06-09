@@ -1,6 +1,3 @@
-// *************** IMPORT MODULE ***************
-const Student = require('./student.model');
-
 // *************** QUERY ***************
 /**
  * GraphQL resolvers for the Student entity.
@@ -21,20 +18,27 @@ const Student = require('./student.model');
  * @returns {Promise<Array|Object|null>} - A promise resolving to a list or single student document.
  * @throws {ApolloError} - If any database operation fails.
  */
-const resolvers = {
+
+// *************** IMPORT HELPER FUNCTION ***************
+const {
+  GetAllStudents,
+  GetOneStudent,
+  CreateStudent,
+  UpdateStudent,
+  DeleteStudent
+} = require('./student.helper');
+
+const studentResolvers = {
   Query: {
-    students: () => Student.find({ deletedAt: null }),
-    student: (_, { id }) => Student.findById(id),
+    students: GetAllStudents,
+    student: GetOneStudent
   },
   Mutation: {
-    createStudent: (_, args) => Student.create(args),
-    updateStudent: async (_, { id, ...updates }) => {
-      return await Student.findByIdAndUpdate(id, updates, { new: true });
-    },
-    deleteStudent: async (_, { id }) => {
-      return await Student.findByIdAndUpdate(id, { deletedAt: new Date() }, { new: true });
-    },
-  },
+    createStudent: CreateStudent,
+    updateStudent: UpdateStudent,
+    deleteStudent: DeleteStudent
+  }
 };
 
-module.exports = { resolvers };
+// *************** EXPORT MODULE ***************
+module.exports = { resolvers: studentResolvers };

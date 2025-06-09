@@ -34,6 +34,13 @@ const StudentSchema = new Schema({
     default: null,
   },
 
+  // Status of the student, can be 'active' or 'deleted'
+  status:{
+    type: String,
+    enum: ['active', 'deleted'],
+    default: 'active',
+  },
+
   // Reference to the school the student is enrolled in
   school_id: {
     type: mongoose.Schema.Types.ObjectId,
