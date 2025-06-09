@@ -1,6 +1,3 @@
-// *************** IMPORT MODULE ***************
-const User = require('./user.model');
-
 // *************** QUERY ***************
 /**
  * GraphQL resolvers for the User entity.
@@ -21,20 +18,27 @@ const User = require('./user.model');
  * @returns {Promise<Array|Object|null>} - A promise resolving to one or many user documents.
  * @throws {ApolloError} - If an operation fails or a user is not found.
  */
-const resolvers = {
+
+// *************** IMPORT HELPER FUNCTION ***************
+const {
+  GetAllUsers,
+  GetOneUser,
+  CreateUser,
+  UpdateUser,
+  DeleteUser
+} = require('./user.helper');
+
+const userResolvers = {
   Query: {
-    users: () => User.find({ deletedAt: null }),
-    user: (_, { id }) => User.findById(id),
+    users: GetAllUsers,
+    user: GetOneUser
   },
   Mutation: {
-    createUser: (_, args) => User.create(args),
-    updateUser: async (_, { id, ...updates }) => {
-      return await User.findByIdAndUpdate(id, updates, { new: true });
-    },
-    deleteUser: async (_, { id }) => {
-      return await User.findByIdAndUpdate(id, { deletedAt: new Date() }, { new: true });
-    },
-  },
+    createUser: CreateUser,
+    updateUser: UpdateUser,
+    deleteUser: DeleteUser
+  }
 };
 
-module.exports = { resolvers };
+// *************** EXPORT MODULE ***************
+module.exports =  { resolvers: userResolvers };

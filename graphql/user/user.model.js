@@ -31,13 +31,20 @@ const UserSchema = new Schema({
   // Encrypted password for login authentication
   password: {
     type: String,
-    required: true,
+    required: false,
   },
 
   // Role of the user (e.g., admin, student, teacher)
   role: {
     type: String,
     required: true,
+  },
+
+  // Overall status of the user (e.g., active, deleted)
+  status: {
+    type: String,
+    enum: ['active', 'deleted'],
+    default: 'active',
   },
 
   // Timestamp to mark soft deletion
