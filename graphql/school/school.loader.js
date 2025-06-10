@@ -18,10 +18,10 @@ function createSchoolLoader() {
     // *************** Map results by _id for ordering
     const schoolMap = {};
     schools.forEach(school => {
-      schoolMap[school._id.String()] = school;
+      schoolMap[school._id.toString()] = school;
     });
 
-    return schoolIds.map(id => schoolMap[id.String()] || null);
+    return schoolIds.map(id => schoolMap[id.toString()] || null);
   });
 }
 

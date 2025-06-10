@@ -20,7 +20,7 @@ function createStudentLoader() {
 
     // *************** Group by school_id
     const grouped = schoolIds.map(id =>
-      students.filter(student => student.school_id.String() === id.String())
+      students.filter(student => student.school_id.toString() === id.toString())
     );
 
     return grouped;
