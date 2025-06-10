@@ -1,8 +1,10 @@
+// *************** IMPORT MODULE ***************
 const { gql } = require('apollo-server');
 const userTypeDefs = require('./user/user.typedef');
 const studentTypeDefs = require('./student/student.typedef');
 const schoolTypeDefs = require('./school/school.typedef');
 
+// *************** EXPORT MODULE ***************
 module.exports = gql`
   scalar Date
 

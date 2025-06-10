@@ -23,4 +23,5 @@ const typeDefs = gql`
   }
 `;
 
+// *************** EXPORT MODULE ***************
 module.exports = { typeDefs };

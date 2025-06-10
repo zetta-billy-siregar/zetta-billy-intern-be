@@ -1,4 +1,3 @@
-
 // *************** QUERY ***************
 /**
  * GraphQL resolvers for the School entity.
