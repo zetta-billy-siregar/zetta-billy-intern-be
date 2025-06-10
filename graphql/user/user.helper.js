@@ -49,9 +49,9 @@ async function GetOneUser(_, { id }) {
  * @throws {ApolloError} - If required fields are missing or DB fails.
  */
 async function CreateUser(_, args) {
-  const { first_name, last_name, email, role } = args;
+  const { first_name, last_name, email, role, status } = args;
 
-  if (!first_name || !last_name || !email || !role) {
+  if (!first_name || !last_name || !email || !role || !status) {
     throw new ApolloError('All fields are required', 'BAD_USER_INPUT');
   }
 
@@ -61,6 +61,7 @@ async function CreateUser(_, args) {
       last_name,
       email,
       role,
+      status,
       password: 'testing123' 
     });
 
@@ -84,6 +85,9 @@ async function CreateUser(_, args) {
  * @throws {ApolloError} - If update fails.
  */
 async function UpdateUser(_, { id, ...updates }) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApolloError('Invalid user ID', 'BAD_USER_INPUT');
+  }
   try {
     console.log(`[GraphQL] updateUser → id: ${id}`);
     return await User.findByIdAndUpdate(id, updates, { new: true });
@@ -105,6 +109,9 @@ async function UpdateUser(_, { id, ...updates }) {
  * @throws {ApolloError} - If deletion fails.
  */
 async function DeleteUser(_, { id }) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApolloError('Invalid user ID', 'BAD_USER_INPUT');
+  }
   try {
     console.log(`[GraphQL] deleteUser → id: ${id}`);
     return await User.findByIdAndUpdate(id, {

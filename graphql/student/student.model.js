@@ -26,6 +26,9 @@ const StudentSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, // Basic email validation
+    trim: true,
+    lowercase: true,
   },
 
   // Date of birth of the student
@@ -37,8 +40,8 @@ const StudentSchema = new Schema({
   // Status of the student, can be 'active' or 'deleted'
   status:{
     type: String,
-    enum: ['active', 'deleted'],
-    default: 'active',
+    enum: ['pending', 'active', 'inactive', 'deleted'],
+    default: 'pending',
   },
 
   // Reference to the school the student is enrolled in
@@ -46,6 +49,18 @@ const StudentSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'School',
     required: true,
+  },
+
+  // Timestamp for when the student was created
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
+
+  // Timestamp for when the student was last updated
+  updated_at: {
+    type: Date,
+    default: Date.now,
   },
 
   // Timestamp to mark soft deletion

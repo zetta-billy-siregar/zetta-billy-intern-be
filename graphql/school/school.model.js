@@ -9,15 +9,25 @@ const SchoolSchema = new Schema({
     auto: true
   },
 
-  // Name of the school
-  name: {
+  // Short Name of the school
+  short_name: {
     type: String,
     required: true,
     unique: true,
     trim: true,
     minlength: 3,
     maxlength: 10,
-    match: /^[a-zA-Z0-9\s]+$/ // Alphanumeric and spaces only
+    default: '',
+  },
+
+  // Long Name of the school
+  long_name: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 3,
+    maxlength: 50,
+    default: '',
   },
 
   // Address of the school
@@ -29,8 +39,20 @@ const SchoolSchema = new Schema({
   // Status of the school (active or deleted)
   status: {
     type: String,
-    enum: ['active', 'inactive', 'deleted'],
+    enum: ['active', 'deleted'],
     default: 'active',
+  },
+
+  // Timestamp for when the school was created
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
+
+  // Timestamp for when the school was last updated
+  updated_at: {
+    type: Date,
+    default: Date.now,
   },
 
   // Timestamp to mark soft deletion

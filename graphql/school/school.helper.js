@@ -16,7 +16,7 @@ const Student = require('../student/student.model');
  */
 async function GetAllSchools() {
   return await School.find({
-    status: { $in: ['active', 'inactive'] }
+    status: { $in: ['active'] }
   }).sort({ createdAt: -1 });
 }
 
@@ -51,15 +51,15 @@ async function GetOneSchool(_, { id }) {
  * @returns {Promise<Object>}
  */
 async function CreateSchool(_, args) {
-  const { name, address, status } = args;
+  const { short_name, long_name, address, status } = args;
 
-  if (!name || !status) {
+  if (!short_name || !long_name || !status) {
     throw new ApolloError('Fields "name" and "status" are required', 'BAD_USER_INPUT');
   }
 
   try {
-    const school = await School.create({ name, address, status });
-    console.log(`[GraphQL] createSchool → ${school.name}`);
+    const school = await School.create({ short_name, long_name, address, status });
+    console.log(`[GraphQL] createSchool → ${school.short_name}`);
     return school;
   } catch (error) {
     console.error(`[GraphQL] createSchool Error →`, error);
@@ -80,11 +80,6 @@ async function UpdateSchool(_, { id, ...updates }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new ApolloError('Invalid school ID', 'BAD_USER_INPUT');
   }
-
-  if (updates.status && !['active', 'inactive', 'deleted'].includes(updates.status)) {
-    throw new ApolloError('Invalid status value', 'BAD_USER_INPUT');
-  }
-
   try {
     const updated = await School.findByIdAndUpdate(id, updates, { new: true });
     console.log(`[GraphQL] updateSchool → ${id}`);

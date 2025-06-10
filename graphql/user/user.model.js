@@ -26,6 +26,9 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, // Basic email validation
+    trim: true,
+    lowercase: true,
   },
 
   // Encrypted password for login authentication
@@ -45,6 +48,18 @@ const UserSchema = new Schema({
     type: String,
     enum: ['active', 'deleted'],
     default: 'active',
+  },
+
+  // Timestamp for when the user was created
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
+
+  // Timestamp for when the user was last updated
+  updated_at: {
+    type: Date,
+    default: Date.now,
   },
 
   // Timestamp to mark soft deletion

@@ -39,7 +39,7 @@ const schoolResolvers = {
     deleteSchool: DeleteSchool
   },
   School: {
-    students: (parent, _args, context) => context.loaders.studentLoader.load(parent.id)
+    students: (parent, _args, context) => context.loaders.studentLoader.loadMany(parent.id)
   }
 };
 

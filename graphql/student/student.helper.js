@@ -88,6 +88,15 @@ async function CreateStudent(_, args) {
  * @throws {ApolloError} - If there is an internal server error during the update process.
  */
 async function UpdateStudent(_, { id, ...updates }) {
+    if (updates.status && !['active'].includes(updates.status)) {
+      throw new ApolloError('Invalid status value', 'BAD_USER_INPUT');
+    }
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApolloError('Invalid student ID', 'BAD_USER_INPUT');
+  }
+  if (updates.date_of_birth && isNaN(Date.parse(updates.date_of_birth))) {
+    throw new ApolloError('Invalid date_of_birth format, use YYYY-MM-DD', 'BAD_USER_INPUT');
+  }
   try {
     console.log(`[GraphQL] updateStudent → id: ${id}`);
     return await Student.findByIdAndUpdate(id, updates, { new: true });
@@ -109,6 +118,9 @@ async function UpdateStudent(_, { id, ...updates }) {
  * @throws {ApolloError} - If there is an internal server error during the deletion process.
  */ 
 async function DeleteStudent(_, { id }) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApolloError('Invalid student ID', 'BAD_USER_INPUT');
+  }
   try {
     console.log(`[GraphQL] deleteStudent → id: ${id}`);
     return await Student.findByIdAndUpdate(id, {
