@@ -4,7 +4,6 @@ const { ApolloError } = require('apollo-server-express');
 
 // *************** IMPORT MODULE ***************
 const School = require('./school.model');
-const Student = require('../student/student.model');
 
 // *************** QUERY ***************
 

@@ -30,8 +30,8 @@ const {
 
 const studentResolvers = {
   Query: {
-    students: GetAllStudents,
-    student: GetOneStudent
+    GetAllStudent: GetAllStudents,
+    GetOneStudent: GetOneStudent
   },
   Mutation: {
     createStudent: CreateStudent,

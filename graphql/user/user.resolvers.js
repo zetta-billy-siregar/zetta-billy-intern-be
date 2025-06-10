@@ -30,8 +30,8 @@ const {
 
 const userResolvers = {
   Query: {
-    users: GetAllUsers,
-    user: GetOneUser
+    GetAllUser: GetAllUsers,
+    GetOneUser: GetOneUser
   },
   Mutation: {
     createUser: CreateUser,

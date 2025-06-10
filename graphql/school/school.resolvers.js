@@ -29,8 +29,8 @@ const {
 
 const schoolResolvers = {
   Query: {
-    schools: GetAllSchools,
-    school: GetOneSchool
+    GetAllSchool: GetAllSchools,
+    GetOneSchool: GetOneSchool
   },
   Mutation: {
     createSchool: CreateSchool,

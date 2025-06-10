@@ -12,8 +12,8 @@ const typeDefs = gql`
   }
 
   extend type Query {
-    schools: [School]
-    school(id: ID!): School
+    GetAllSchool: [School]
+    GetOneSchool(id: ID!): School
   }
 
   extend type Mutation {

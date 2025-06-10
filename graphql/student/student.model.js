@@ -37,7 +37,7 @@ const StudentSchema = new Schema({
     default: null,
   },
 
-  // Status of the student, can be 'active' or 'deleted'
+  // Status of the student is pending by default, can be 'active', 'inactive' or 'deleted'
   status:{
     type: String,
     enum: ['pending', 'active', 'inactive', 'deleted'],
