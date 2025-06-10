@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
  * Does not connect immediately — it just provides the `connect` function to be called manually.
  */
 async function connectToDatabase() {
+    mongoose.set('debug', true);
     const mongoUri = process.env.MONGO_URI;
 
     if (!mongoUri) {

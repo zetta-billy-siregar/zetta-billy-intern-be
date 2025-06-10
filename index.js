@@ -9,6 +9,10 @@ const { mergeTypeDefs, mergeResolvers } = require('@graphql-tools/merge');
 // *************** IMPORT APP & DB CONNECTOR ***************
 const connectToDatabase = require('./utils/Database');
 
+// *************** IMPORT DATALOADERS ***************
+const createStudentLoader = require('./graphql/student/student.loader');
+const createSchoolLoader = require('./graphql/school/school.loader');
+
 // *************** IMPORT MODELS ***************
 require('./graphql/student/student.model');
 require('./graphql/school/school.model');
@@ -49,6 +53,12 @@ async function startServer() {
     const server = new ApolloServer({
       typeDefs,
       resolvers,
+      context: () => ({
+        loaders: {
+          studentLoader: createStudentLoader(),
+          schoolLoader: createSchoolLoader(),
+        },
+      }),
     });
 
     await server.start();

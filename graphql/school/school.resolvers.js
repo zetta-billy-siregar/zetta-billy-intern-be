@@ -26,7 +26,6 @@ const {
   CreateSchool,
   UpdateSchool,
   DeleteSchool,
-  ResolveStudents
 } = require('./school.helper');
 
 const schoolResolvers = {
@@ -40,7 +39,7 @@ const schoolResolvers = {
     deleteSchool: DeleteSchool
   },
   School: {
-    students: ResolveStudents
+    students: (parent, _args, context) => context.loaders.studentLoader.load(parent.id)
   }
 };
 

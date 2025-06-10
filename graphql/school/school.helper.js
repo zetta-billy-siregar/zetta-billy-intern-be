@@ -17,7 +17,7 @@ const Student = require('../student/student.model');
 async function GetAllSchools() {
   return await School.find({
     status: { $in: ['active', 'inactive'] }
-  });
+  }).sort({ createdAt: -1 });
 }
 
 /**
@@ -121,19 +121,6 @@ async function DeleteSchool(_, { id }) {
   }
 }
 
-// *************** LOADER ***************
-
-/**
- * Resolve students belonging to a school
- * @param {Object} parent - The parent school object
- * @returns {Promise<Array>}
- */
-async function ResolveStudents(parent) {
-  return await Student.find({
-    school_id: parent.id,
-    status: 'active'
-  });
-}
 
 // *************** EXPORT MODULE ***************
 module.exports = {
@@ -142,5 +129,4 @@ module.exports = {
   CreateSchool,
   UpdateSchool,
   DeleteSchool,
-  ResolveStudents
 };
