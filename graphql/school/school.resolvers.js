@@ -1,6 +1,3 @@
-// *************** IMPORT MODULE ***************
-const School = require('./school.model');
-const Student = require('../student/student.model');
 
 // *************** QUERY ***************
 /**
@@ -21,23 +18,31 @@ const Student = require('../student/student.model');
  * @returns {Promise<Array|Object|null>} - Resolves to school document(s) or related student list.
  * @throws {ApolloError} - If any database operation fails.
  */
-const resolvers = {
+
+// *************** IMPORT HELPER FUNCTION ***************
+const {
+  GetAllSchools,
+  GetOneSchool,
+  CreateSchool,
+  UpdateSchool,
+  DeleteSchool,
+  ResolveStudents
+} = require('./school.helper');
+
+const schoolResolvers = {
   Query: {
-    schools: () => School.find(),
-    school: (_, { id }) => School.findById(id),
+    schools: GetAllSchools,
+    school: GetOneSchool
   },
   Mutation: {
-    createSchool: (_, args) => School.create(args),
-    updateSchool: async (_, { id, ...updates }) => {
-      return await School.findByIdAndUpdate(id, updates, { new: true });
-    },
-    deleteSchool: async (_, { id }) => {
-      return await School.findByIdAndDelete(id);
-    },
+    createSchool: CreateSchool,
+    updateSchool: UpdateSchool,
+    deleteSchool: DeleteSchool
   },
   School: {
-    students: (parent) => Student.find({ schoolId: parent.id, deletedAt: null }),
-  },
+    students: ResolveStudents
+  }
 };
 
-module.exports = { resolvers };
+// *************** EXPORT MODULE ***************
+module.exports = { resolvers: schoolResolvers };

@@ -1,3 +1,4 @@
+// *************** IMPORT LIBRARY ***************
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
@@ -5,6 +6,7 @@ const typeDefs = gql`
     id: ID!
     name: String!
     address: String
+    status: String!
     students: [Student]
   }
 
@@ -14,8 +16,8 @@ const typeDefs = gql`
   }
 
   extend type Mutation {
-    createSchool(name: String!, address: String): School
-    updateSchool(id: ID!, name: String, address: String): School
+    createSchool(name: String!, address: String, status: String!): School
+    updateSchool(id: ID!, name: String!, address: String, status: String!): School
     deleteSchool(id: ID!): School
   }
 `;
