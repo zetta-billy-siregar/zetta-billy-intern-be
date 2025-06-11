@@ -9,7 +9,7 @@ const School = require('./school.model');
 
 /**
  * Get all schools with status 'active' or 'inactive'
- * @sync
+ * @async
  * @returns {Promise<Array>}
  * @throws {ApolloError} - If database operation fails
  */
@@ -22,7 +22,7 @@ async function GetAllSchools() {
 /**
  * Get one school by ID
  * 
- * @sync
+ * @async
  * @param {Object} _
  * @param {Object} args
  * @param {string} args.id
@@ -41,7 +41,7 @@ async function GetOneSchool(_, { id }) {
 /**
  * Create a new school entry
  * 
- * @sync
+ * @async
  * @param {Object} _
  * @param {Object} args
  * @param {string} args.name
@@ -69,6 +69,8 @@ async function CreateSchool(_, args) {
 
 /**
  * Update a school by ID
+ * 
+ * @async
  * @param {Object} _
  * @param {Object} args
  * @param {string} args.id
@@ -91,6 +93,8 @@ async function UpdateSchool(_, { id, ...updates }) {
 
 /**
  * Soft delete a school by marking status as 'deleted'
+ * 
+ * @async
  * @param {Object} _
  * @param {Object} args
  * @param {string} args.id

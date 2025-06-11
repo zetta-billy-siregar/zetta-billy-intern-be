@@ -12,7 +12,7 @@ const typeDefs = gql`
   }
 
   extend type Query {
-    GetAllSchool: [School]
+    GetAllSchools: [School]
     GetOneSchool(id: ID!): School
   }
 

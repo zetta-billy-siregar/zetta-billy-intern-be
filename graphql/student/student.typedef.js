@@ -14,13 +14,13 @@ const typeDefs = gql`
   }
 
   extend type Query {
-    GetAllStudent: [Student]
+    GetAllStudents: [Student]
     GetOneStudent(id: ID!): Student
   }
 
   extend type Mutation {
-    createStudent(first_name: String!, last_name: String!, email: String!, date_of_birth: String, status: String, school_id: ID!): Student
-    updateStudent(id: ID!, first_name: String, last_name: String, email: String, date_of_birth: String): Student
+    createStudent(first_name: String!, last_name: String!, email: String!, date_of_birth: String, school_id: ID!): Student
+    updateStudent(id: ID!, first_name: String, last_name: String, email: String, date_of_birth: String, status: String): Student
     deleteStudent(id: ID!): Student
   }
 `;

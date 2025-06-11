@@ -12,7 +12,7 @@ const typeDefs = gql`
   }
 
   extend type Query {
-    GetAllUser: [User]
+    GetAllUsers: [User]
     GetOneUser(id: ID!): User
   }
 

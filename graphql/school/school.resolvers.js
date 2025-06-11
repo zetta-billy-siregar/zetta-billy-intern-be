@@ -29,7 +29,7 @@ const {
 
 const schoolResolvers = {
   Query: {
-    GetAllSchool: GetAllSchools,
+    GetAllSchools: GetAllSchools,
     GetOneSchool: GetOneSchool
   },
   Mutation: {

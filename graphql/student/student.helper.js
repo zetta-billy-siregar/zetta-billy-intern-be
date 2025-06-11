@@ -14,7 +14,10 @@ const Student = require('./student.model');
  * @returns {Promise<Array>} - List of students not marked as deleted.
  */
 async function GetAllStudents() {
-  return await Student.find({ status: 'active' });
+  return await Student.find({ status: { $ne: 'deleted' } })
+    .sort({ created_at: -1 })
+    // .populate('school_id', 'short_name long_name address status')
+    // .select('-__v -deleted_at'); 
 }
 
 /**
@@ -65,7 +68,6 @@ async function CreateStudent(_, args) {
       email,
       date_of_birth,
       school_id,
-      status: 'active'
     });
     console.log(`[GraphQL] createStudent → ${student.first_name} (${student.email})`);
     return student;
@@ -88,18 +90,20 @@ async function CreateStudent(_, args) {
  * @throws {ApolloError} - If there is an internal server error during the update process.
  */
 async function UpdateStudent(_, { id, ...updates }) {
-    if (updates.status && !['active'].includes(updates.status)) {
-      throw new ApolloError('Invalid status value', 'BAD_USER_INPUT');
-    }
+  // ***************Validate ID and updates
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new ApolloError('Invalid student ID', 'BAD_USER_INPUT');
   }
   if (updates.date_of_birth && isNaN(Date.parse(updates.date_of_birth))) {
     throw new ApolloError('Invalid date_of_birth format, use YYYY-MM-DD', 'BAD_USER_INPUT');
   }
+  if (updates.status && !['active', 'inactive', 'deleted'].includes(updates.status)) {
+    throw new ApolloError('Invalid status value', 'BAD_USER_INPUT');
+  }
   try {
+    const updatedStudent = await Student.findByIdAndUpdate(id, updates, { new: true });
     console.log(`[GraphQL] updateStudent → id: ${id}`);
-    return await Student.findByIdAndUpdate(id, updates, { new: true });
+    return updatedStudent;
   } catch (error) {
     console.error(`[GraphQL] updateStudent Error →`, error);
     throw new ApolloError('Failed to update student', 'INTERNAL_SERVER_ERROR');

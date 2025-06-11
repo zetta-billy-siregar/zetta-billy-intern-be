@@ -30,7 +30,7 @@ const {
 
 const studentResolvers = {
   Query: {
-    GetAllStudent: GetAllStudents,
+    GetAllStudents: GetAllStudents,
     GetOneStudent: GetOneStudent
   },
   Mutation: {
