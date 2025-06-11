@@ -68,8 +68,6 @@ const StudentSchema = new Schema({
     type: Date,
     default: null,
   },
-}, {
-  timestamps: true,
 });
 
 // *************** EXPORT MODULE ***************
