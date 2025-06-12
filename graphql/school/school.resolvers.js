@@ -52,19 +52,15 @@ async function GetOneSchool(_, { id }) {
  * @returns {Promise<Object>}
  */
 async function CreateSchool(_, { input }) {
-  const { short_name, long_name, address, status } = input;
-  // *************** Validate short_name length
-  if (short_name.length < 3 || short_name.length > 10) {
-    throw new ApolloError('Short name must be between 3 and 10 characters', 'BAD_USER_INPUT');
-  }
-  // *************** Validate long_name length
-  if (long_name.length < 3 || long_name.length > 50) {
-    throw new ApolloError('Long name must be between 3 and 50 characters', 'BAD_USER_INPUT');
+  const { name, address, status } = input;
+  // *************** Validate name length
+  if (name.length < 3 || name.length > 50) {
+    throw new ApolloError('Name must be between 3 and 50 characters', 'BAD_USER_INPUT');
   }
   // *************** Create the school document
   try {
-    const school = await School.create({ short_name, long_name, address, status });
-    console.log(`[GraphQL] createSchool → ${school.short_name}`);
+    const school = await School.create({ name, address, status });
+    console.log(`[GraphQL] createSchool → ${school.name}`);
     return school;
   } catch (error) {
     console.error(`[GraphQL] createSchool Error →`, error);
@@ -89,11 +85,8 @@ async function UpdateSchool(_, { id, ...updates }) {
     throw new ApolloError('Invalid school ID', 'BAD_USER_INPUT');
   }
   // *************** Validate name updates
-  if (updates.short_name && (updates.short_name.length < 3 || updates.short_name.length > 10)) {
-    throw new ApolloError('Short name must be between 3 and 10 characters', 'BAD_USER_INPUT');
-  }
-  if (updates.long_name && (updates.long_name.length < 3 || updates.long_name.length > 50)) {
-    throw new ApolloError('Long name must be between 3 and 50 characters', 'BAD_USER_INPUT');
+  if (updates.name && (updates.name.length < 3 || updates.name.length > 50)) {
+    throw new ApolloError('Name must be between 3 and 50 characters', 'BAD_USER_INPUT');
   }
   // *************** Validate status update
   if (updates.status && !['active'].includes(updates.status)) {

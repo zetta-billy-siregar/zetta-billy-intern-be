@@ -1,18 +1,18 @@
 // *************** IMPORT LIBRARY ***************
-const userResolvers = require('./user/user.resolver');
-const studentResolvers = require('./student/student.resolver');
-const schoolResolvers = require('./school/school.resolver');
+const UserResolvers = require('./user/user.resolvers');
+const StudentResolvers = require('./student/student.resolvers');
+const SchoolResolvers = require('./school/school.resolvers');
 
 // *************** EXPORT MODULE ***************
 module.exports = {
   Query: {
-    ...userResolvers.Query,
-    ...studentResolvers.Query,
-    ...schoolResolvers.Query,
+    ...UserResolvers.Query,
+    ...StudentResolvers.Query,
+    ...SchoolResolvers.Query,
   },
   Mutation: {
-    ...userResolvers.Mutation,
-    ...studentResolvers.Mutation,
-    ...schoolResolvers.Mutation,
+    ...UserResolvers.Mutation,
+    ...StudentResolvers.Mutation,
+    ...SchoolResolvers.Mutation,
   },
 };

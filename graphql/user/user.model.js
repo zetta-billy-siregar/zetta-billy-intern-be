@@ -51,19 +51,19 @@ const UserSchema = new Schema({
   },
 
   // Timestamp for when the user was created
-  created_at: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },
 
   // Timestamp for when the user was last updated
-  updated_at: {
+  updatedAt: {
     type: Date,
     default: Date.now,
   },
 
   // Timestamp to mark soft deletion
-  deleted_at: {
+  deletedAt: {
     type: Date,
     default: null,
   },

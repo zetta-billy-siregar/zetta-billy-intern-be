@@ -4,16 +4,14 @@ const { gql } = require('apollo-server-express');
 const typeDefs = gql`
   type School {
     id: ID!
-    short_name: String!
-    long_name: String!
+    name: String!
     address: String
     status: String!
     students: [Student]
   }
 
   input SchoolInput {
-    short_name: String!
-    long_name: String!
+    name: String!
     address: String
     status: String!
   }
@@ -25,7 +23,7 @@ const typeDefs = gql`
 
   extend type Mutation {
     createSchool(input: SchoolInput!): School
-    updateSchool(id: ID!, short_name: String!, long_name: String!, address: String): School
+    updateSchool(id: ID!, name: String!, address: String): School
     deleteSchool(id: ID!): School
   }
 `;

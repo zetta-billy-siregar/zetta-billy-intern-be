@@ -9,19 +9,11 @@ const SchoolSchema = new Schema({
     auto: true
   },
 
-  // Short Name of the school
-  short_name: {
+  // Name of the school
+  name: {
     type: String,
     required: true,
     unique: true,
-    trim: true,
-    default: '',
-  },
-
-  // Long Name of the school
-  long_name: {
-    type: String,
-    required: true,
     trim: true,
     default: '',
   },
@@ -46,19 +38,19 @@ const SchoolSchema = new Schema({
   }],
 
   // Timestamp for when the school was created
-  created_at: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },
 
   // Timestamp for when the school was last updated
-  updated_at: {
+  updatedAt: {
     type: Date,
     default: Date.now,
   },
 
   // Timestamp to mark soft deletion
-  deleted_at: {
+  deletedAt: {
     type: Date,
     default: null,
   },
