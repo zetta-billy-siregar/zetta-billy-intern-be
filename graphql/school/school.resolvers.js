@@ -1,32 +1,173 @@
+// *************** IMPORT LIBRARY ***************
+const mongoose = require('mongoose');
+const { ApolloError } = require('apollo-server-express');
+
+// *************** IMPORT MODULE ***************
+const School = require('./school.model');
+
 // *************** QUERY ***************
+
 /**
- * GraphQL resolvers for the School entity.
- *
- * @function schools
- * @function school
- * @function createSchool
- * @function updateSchool
- * @function deleteSchool
- * @function School.students
- * @param {Object} _ - The parent resolver (unused in root queries/mutations).
- * @param {Object} args - The arguments passed to the resolver.
- * @param {string} args.id - The MongoDB ObjectId of the school (used in single fetch, update, delete).
- * @param {string} args.name - Name of the school (create/update).
- * @param {string} [args.address] - Optional address of the school (create/update).
- * @param {Object} parent - Parent object passed to nested resolvers (used in School.students).
- * @returns {Promise<Array|Object|null>} - Resolves to school document(s) or related student list.
- * @throws {ApolloError} - If any database operation fails.
+ * Get all schools with status 'active' or 'inactive'
+ * @async
+ * @returns {Promise<Array>}
+ * @throws {ApolloError} - If database operation fails
  */
+async function GetAllSchools() {
+  // *************** Fetch all schools with status 'active' and sort by createdAt in descending order
+  return await School.find({
+    status: { $in: ['active'] }
+  }).sort({ createdAt: -1 });
+}
 
-// *************** IMPORT HELPER FUNCTION ***************
-const {
-  GetAllSchools,
-  GetOneSchool,
-  CreateSchool,
-  UpdateSchool,
-  DeleteSchool,
-} = require('./school.helper');
+/**
+ * Get one school by ID
+ * 
+ * @async
+ * @param {Object} _
+ * @param {Object} args
+ * @param {string} args.id
+ * @returns {Promise<Object|null>}
+ */
+async function GetOneSchool(_, { id }) {
+  // *************** Validate the ID format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApolloError('Invalid school ID', 'BAD_USER_INPUT');
+  }
 
+  return await School.findById(id);
+}
+
+// *************** MUTATION ***************
+
+/**
+ * Create a new school entry
+ * 
+ * @async
+ * @param {Object} _
+ * @param {Object} args
+ * @param {string} args.name
+ * @param {string} args.address
+ * @param {string} args.status
+ * @returns {Promise<Object>}
+ */
+async function CreateSchool(_, { input }) {
+  const { short_name, long_name, address, status } = input;
+  // *************** Validate short_name length
+  if (short_name.length < 3 || short_name.length > 10) {
+    throw new ApolloError('Short name must be between 3 and 10 characters', 'BAD_USER_INPUT');
+  }
+  // *************** Validate long_name length
+  if (long_name.length < 3 || long_name.length > 50) {
+    throw new ApolloError('Long name must be between 3 and 50 characters', 'BAD_USER_INPUT');
+  }
+  // *************** Create the school document
+  try {
+    const school = await School.create({ short_name, long_name, address, status });
+    console.log(`[GraphQL] createSchool → ${school.short_name}`);
+    return school;
+  } catch (error) {
+    console.error(`[GraphQL] createSchool Error →`, error);
+    throw new ApolloError('Failed to create school', 'INTERNAL_SERVER_ERROR');
+  }
+}
+
+
+/**
+ * Update a school by ID
+ * 
+ * @async
+ * @param {Object} _
+ * @param {Object} args
+ * @param {string} args.id
+ * @param {Object} args.updates
+ * @returns {Promise<Object>}
+ */
+async function UpdateSchool(_, { id, ...updates }) {
+  // *************** Validate the ID format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApolloError('Invalid school ID', 'BAD_USER_INPUT');
+  }
+  // *************** Validate name updates
+  if (updates.short_name && (updates.short_name.length < 3 || updates.short_name.length > 10)) {
+    throw new ApolloError('Short name must be between 3 and 10 characters', 'BAD_USER_INPUT');
+  }
+  if (updates.long_name && (updates.long_name.length < 3 || updates.long_name.length > 50)) {
+    throw new ApolloError('Long name must be between 3 and 50 characters', 'BAD_USER_INPUT');
+  }
+  // *************** Validate status update
+  if (updates.status && !['active'].includes(updates.status)) {
+    throw new ApolloError('Status must be "active"', 'BAD_USER_INPUT');
+  }
+  // *************** Update the school document with new values
+  try {
+    const updated = await School.findByIdAndUpdate(id, updates, { new: true });
+    console.log(`[GraphQL] updateSchool → ${id}`);
+    return updated;
+  } catch (error) {
+    console.error(`[GraphQL] updateSchool Error →`, error);
+    throw new ApolloError('Failed to update school', 'INTERNAL_SERVER_ERROR');
+  }
+}
+
+/**
+ * Soft delete a school by marking status as 'deleted'
+ * 
+ * @async
+ * @param {Object} _
+ * @param {Object} args
+ * @param {string} args.id
+ * @returns {Promise<Object|null>}
+ */
+async function DeleteSchool(_, { id }) {
+  // *************** Validate the ID format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApolloError('Invalid school ID', 'BAD_USER_INPUT');
+  }
+  // *************** Attempt to find and update the school document & to set status to 'deleted' and mark the deletion time
+  try {
+    const deletedSchool = await School.findByIdAndUpdate(id, {
+      status: 'deleted',
+      deleted_at: new Date()
+    }, { new: true });
+
+    console.log(`[GraphQL] deleteSchool → ${id}`);
+    return deletedSchool;
+  } catch (error) {
+    console.error(`[GraphQL] deleteSchool Error →`, error);
+    throw new ApolloError('Failed to delete school', 'INTERNAL_SERVER_ERROR');
+  }
+}
+
+/**
+ * Resolve students for a given school using DataLoader.
+ * Optimized to batch and cache requests, avoiding N+1 problem.
+ *
+ * @async
+ * @function ResolveStudentsUsingLoader
+ * @param {Object} parent - The parent school object.
+ * @param {Object} _args - GraphQL arguments (unused).
+ * @param {Object} context - GraphQL context containing loaders.
+ * @returns {Promise<Array>} - List of students associated with the school.
+ * @throws {ApolloError} - If fetching students fails.
+ */
+async function ResolveStudentsUsingLoader(parent, _args, context) {
+  // *************** Validate parent object
+  if (!parent || !parent.id) {
+    throw new ApolloError('Invalid school data', 'BAD_USER_INPUT');
+  }
+  // *************** Use DataLoader to fetch students for the school
+  try {
+    const students = await context.loaders.studentLoader.load(parent.id);
+    console.log(`[DataLoader] Loaded students for school_id: ${parent.id}`);
+    return students;
+  } catch (error) {
+    console.error(`[DataLoader] Failed to load students for school_id: ${parent.id}`, error);
+    throw new ApolloError('Failed to load students for school', 'INTERNAL_SERVER_ERROR');
+  }
+}
+
+// *************** SCHOOL RESOLVERS EXPORT ***************
 const schoolResolvers = {
   Query: {
     GetAllSchools: GetAllSchools,
@@ -38,7 +179,7 @@ const schoolResolvers = {
     deleteSchool: DeleteSchool
   },
   School: {
-    students: (parent, _args, context) => context.loaders.studentLoader.load(parent.id)
+    students: ResolveStudentsUsingLoader
   }
 };
 

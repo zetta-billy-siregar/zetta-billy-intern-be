@@ -13,14 +13,14 @@ module.exports = gql`
   ${schoolTypeDefs}
 
   type Query {
-    users: [User]
-    user(id: ID!): User
+    GetAllUsers: [User]
+    GetOneUser(id: ID!): User
 
-    students: [Student]
-    student(id: ID!): Student
+    GetAllStudents: [Student]
+    GetOneStudent(id: ID!): Student
 
-    schools: [School]
-    school(id: ID!): School
+    GetAllSchools: [School]
+    GetOneSchool(id: ID!): School
   }
 
   type Mutation {

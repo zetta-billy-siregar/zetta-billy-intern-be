@@ -25,8 +25,6 @@ const StudentSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
-    match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, // Basic email validation
     trim: true,
     lowercase: true,
   },
@@ -40,7 +38,7 @@ const StudentSchema = new Schema({
   // Status of the student is pending by default, can be 'active', 'inactive' or 'deleted'
   status:{
     type: String,
-    enum: ['pending', 'active', 'inactive', 'deleted'],
+    enum: ['pending', 'active', 'deleted'],
     default: 'pending',
   },
 

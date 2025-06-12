@@ -10,6 +10,13 @@ const typeDefs = gql`
     role: String!
     status: String!
   }
+  input UserInput {
+    first_name: String!
+    last_name: String!
+    email: String!
+    role: String!
+    status: String!
+  }
 
   extend type Query {
     GetAllUsers: [User]
@@ -17,7 +24,7 @@ const typeDefs = gql`
   }
 
   extend type Mutation {
-    createUser(first_name: String!, last_name: String!, status: String!, email: String!, role: String!): User
+    createUser(input: UserInput!): User
     updateUser(id: ID!, first_name: String, last_name: String, email: String, role: String): User
     deleteUser(id: ID!): User
   }

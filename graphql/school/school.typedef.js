@@ -11,14 +11,21 @@ const typeDefs = gql`
     students: [Student]
   }
 
+  input SchoolInput {
+    short_name: String!
+    long_name: String!
+    address: String
+    status: String!
+  }
+
   extend type Query {
     GetAllSchools: [School]
     GetOneSchool(id: ID!): School
   }
 
   extend type Mutation {
-    createSchool(short_name: String!, long_name: String!, address: String, status: String!): School
-    updateSchool(id: ID!, name: String!, address: String, status: String!): School
+    createSchool(input: SchoolInput!): School
+    updateSchool(id: ID!, short_name: String!, long_name: String!, address: String): School
     deleteSchool(id: ID!): School
   }
 `;

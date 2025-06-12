@@ -25,8 +25,6 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
-    match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, // Basic email validation
     trim: true,
     lowercase: true,
   },
@@ -40,6 +38,8 @@ const UserSchema = new Schema({
   // Role of the user (e.g., admin, student, teacher)
   role: {
     type: String,
+    enum: ['admin', 'student', 'teacher'],
+    default: '',
     required: true,
   },
 

@@ -15,8 +15,6 @@ const SchoolSchema = new Schema({
     required: true,
     unique: true,
     trim: true,
-    minlength: 3,
-    maxlength: 10,
     default: '',
   },
 
@@ -25,8 +23,6 @@ const SchoolSchema = new Schema({
     type: String,
     required: true,
     trim: true,
-    minlength: 3,
-    maxlength: 50,
     default: '',
   },
 
@@ -42,6 +38,12 @@ const SchoolSchema = new Schema({
     enum: ['active', 'deleted'],
     default: 'active',
   },
+
+  // Reference to the students enrolled in the school
+  students: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Student',
+  }],
 
   // Timestamp for when the school was created
   created_at: {
